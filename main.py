@@ -1,3 +1,5 @@
+import os
+import argparse
 import pandas as pd
 from jinja2 import Environment, FileSystemLoader
 from http.server import HTTPServer, SimpleHTTPRequestHandler
@@ -22,7 +24,7 @@ def calculate_winery_age(foundation_year=1920):
     age = current_year - foundation_year
     return age, get_year_word(age)
 
-def load_wine_data(file_path="wine_catalog.xlsx"):
+def load_wine_data(file_path):
     """Загружает и группирует данные о вине из Excel."""
     df = pd.read_excel(file_path, engine="openpyxl", na_values=[""], keep_default_na=False)
     grouped_products = defaultdict(list)
@@ -52,10 +54,18 @@ def start_server():
     server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
     server.serve_forever()
 
+def parse_arguments():
+    """Парсит аргументы командной строки."""
+    parser = argparse.ArgumentParser(description="Запуск винного каталога")
+    parser.add_argument("--data", default=os.getenv("WINE_DATA_FILE", "wine_catalog.xlsx"),
+                        help="Путь к файлу с данными (по умолчанию wine_catalog.xlsx)")
+    return parser.parse_args()
+
 def main():
     """Основная логика программы."""
+    args = parse_arguments()
     age, age_word = calculate_winery_age()
-    grouped_products = load_wine_data()
+    grouped_products = load_wine_data(args.data)
     render_template(grouped_products, age, age_word)
     start_server()
 
