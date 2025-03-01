@@ -24,7 +24,7 @@ def calculate_winery_age(foundation_year=1920):
     return age, get_year_word(age)
 
 
-def load_wine_data(file_path="wine3.xlsx"):
+def load_wine_data(file_path="wine_catalog.xlsx"):
     """Загружает и группирует данные о вине из Excel."""
     df = pd.read_excel(file_path, engine="openpyxl", na_values=[""], keep_default_na=False)
 
