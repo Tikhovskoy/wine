@@ -27,13 +27,11 @@ def calculate_winery_age(foundation_year=1920):
 def load_wine_data(file_path):
     """Загружает и группирует данные о вине из Excel."""
     df = pd.read_excel(file_path, engine="openpyxl", na_values=[""], keep_default_na=False)
+    df = df.where(pd.notna(df), None)  # Заменяет NaN на None
     grouped_products = defaultdict(list)
     for _, row in df.iterrows():
         category = row["Категория"]
         product = row.drop("Категория").to_dict()
-        for key, value in product.items():
-            if isinstance(value, float) and math.isnan(value):
-                product[key] = None
         grouped_products[category].append(product)
     return grouped_products
 
