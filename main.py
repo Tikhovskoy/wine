@@ -19,15 +19,15 @@ def get_year_word(number: int) -> str:
     return "лет"
 
 def calculate_winery_age(foundation_year=1920):
-    """Возвращает возраст винодельни и правильную форму слова 'год'."""
+    """Возвращает возраст винодельни."""
     current_year = datetime.now().year
     age = current_year - foundation_year
-    return age, get_year_word(age)
+    return age
 
 def load_wine_data(file_path):
     """Загружает и группирует данные о вине из Excel."""
     df = pd.read_excel(file_path, engine="openpyxl", na_values=[""], keep_default_na=False)
-    df = df.where(pd.notna(df), None)  # Заменяет NaN на None
+    df = df.where(pd.notna(df), None)  
     grouped_products = defaultdict(list)
     for _, row in df.iterrows():
         category = row["Категория"]
@@ -62,7 +62,8 @@ def parse_arguments():
 def main():
     """Основная логика программы."""
     args = parse_arguments()
-    age, age_word = calculate_winery_age()
+    age = calculate_winery_age()
+    age_word = get_year_word(age)
     grouped_products = load_wine_data(args.data)
     render_template(grouped_products, age, age_word)
     start_server()
