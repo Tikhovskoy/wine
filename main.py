@@ -4,7 +4,6 @@ import pandas as pd
 from jinja2 import Environment, FileSystemLoader
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from collections import defaultdict
-import math
 from datetime import datetime
 
 def get_year_word(number: int) -> str:
@@ -27,7 +26,7 @@ def calculate_winery_age(foundation_year=1920):
 def load_and_group_wines(file_path):
     """Загружает и группирует данные о вине из Excel."""
     df = pd.read_excel(file_path, engine="openpyxl", na_values=[""], keep_default_na=False)
-    df = df.where(pd.notna(df), None)  
+    df = df.where(pd.notna(df), None)
     grouped_products = defaultdict(list)
     for _, row in df.iterrows():
         category = row["Категория"]
@@ -42,7 +41,9 @@ def render_template(grouped_products, age, age_word):
     rendered_html = template.render(
         grouped_products=grouped_products,
         age=age,
-        age_word=age_word
+        age_word=age_word,
+        special_offer='Выгодное предложение',
+        excluded_category='Напитки'
     )
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(rendered_html)
