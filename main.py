@@ -24,7 +24,7 @@ def calculate_winery_age(foundation_year=1920):
     age = current_year - foundation_year
     return age
 
-def load_wine_data(file_path):
+def load_and_group_wines(file_path):
     """Загружает и группирует данные о вине из Excel."""
     df = pd.read_excel(file_path, engine="openpyxl", na_values=[""], keep_default_na=False)
     df = df.where(pd.notna(df), None)  
@@ -64,7 +64,7 @@ def main():
     args = parse_arguments()
     age = calculate_winery_age()
     age_word = get_year_word(age)
-    grouped_products = load_wine_data(args.data)
+    grouped_products = load_and_group_wines(args.data)
     render_template(grouped_products, age, age_word)
     start_server()
 
