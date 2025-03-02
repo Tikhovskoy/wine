@@ -1,3 +1,5 @@
 env/
 .vscode/
-
+index.html
+env/
+__pycache__/
